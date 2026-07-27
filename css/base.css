@@ -1,0 +1,43 @@
+* {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-body);
+      line-height: 1.8;
+      overflow-x: hidden;
+
+      background-image: linear-gradient(rgba(245, 241, 232, 0.90), rgba(245, 241, 232, 0.92)),
+        url('./bg.jpg');
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    section {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 8rem 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--muted-text);
+      margin-bottom: 2rem;
+      opacity: 0.8;
+      text-align: center;
+      font-weight: 500;
+    }

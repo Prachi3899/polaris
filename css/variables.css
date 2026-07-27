@@ -1,0 +1,10 @@
+:root {
+      --bg-color: #F5F1E8;
+      --text-color: #0D1B2A;
+      --accent-gold: #D4AF37;
+      --muted-text: #264653;
+      --border-color: rgba(13, 27, 42, 0.15);
+      --font-title: 'Cormorant Garamond', serif;
+      --font-body: 'Inter', sans-serif;
+      --font-quote: 'EB Garamond', serif;
+    }

@@ -1,0 +1,111 @@
+
+/* IDENTITY SECTION */
+    #identity {
+      text-align: center;
+    }
+
+    /* SECTION 5 — "LETTERS NEVER SENT" */
+    #threshold {
+      text-align: center;
+      padding: 10rem 2rem 6rem;
+    }
+
+    .threshold-title {
+      font-family: var(--font-title);
+      font-size: 3.2rem;
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .threshold-sub {
+      font-family: var(--font-quote);
+      font-style: italic;
+      font-size: 1.3rem;
+      color: var(--muted-text);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .threshold-line {
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(to bottom, var(--accent-gold), transparent);
+      margin: 3rem auto 0;
+    }
+
+
+    /* <!-- SECTIONS 3 & 4: THE QUIET OBSERVATIONS --> */
+  
+      .observations-container {
+        display: flex;
+        flex-direction: column;
+        gap: 4.5rem;
+        margin-top: 4rem;
+        position: relative;
+      }
+
+      .observations-container::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: linear-gradient(to bottom, transparent, var(--accent-gold), transparent);
+        opacity: 0.4;
+      }
+
+      .observation-chapter {
+        padding-left: 2.5rem;
+        position: relative;
+      }
+
+      .observation-chapter::before {
+        content: "◆";
+        position: absolute;
+        left: -5px;
+        top: 0.2rem;
+        font-size: 0.6rem;
+        color: var(--accent-gold);
+      }
+
+      .chapter-num {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        color: var(--accent-gold);
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+
+      .chapter-title {
+        font-family: var(--font-title);
+        font-size: 2.2rem;
+        font-weight: 400;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+      }
+
+      .chapter-lead {
+        font-family: var(--font-quote);
+        font-style: italic;
+        color: var(--muted-text);
+        font-size: 1.05rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .chapter-body p {
+        font-size: 1.05rem;
+        color: rgba(13, 27, 42, 0.88);
+        font-weight: 300;
+        line-height: 1.9;
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 768px) {
+        .observation-chapter {
+          padding-left: 1.5rem;
+        }
+      }
+    
