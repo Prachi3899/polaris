@@ -264,7 +264,7 @@
       opacity: 0.6;
     }
 
-    /* SECTION 3 — "THINGS THAT BUILT ME" */
+    /* SECTION 3 — "THE PERSON BEFORE THE STORY" */
     .pillars-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -286,10 +286,10 @@
     }
 
     .pillar-desc {
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--bg-color);
       font-weight: 300;
-      line-height: 1.7;
+      line-height: 1.6;
     }
 
     /* SECTION 4 — "THE COMPASS" */
@@ -728,161 +728,194 @@
       <a href="#identity" class="scroll-indicator">↓ Scroll to enter</a>
     </section>
 
-    <!-- SECTION 2 — "NOT A BIOGRAPHY" -->
-    <section id="identity">
-      <div class="section-label">Identity</div>
+ 
+<!-- SECTION 2: IDENTITY -->
+<section id="identity" style="padding: 5rem 1rem 3rem 1rem; text-align: center;">
+  
+  <!-- Section Label -->
+  <div class="section-label" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent-gold); font-weight: 500; margin-bottom: 3.5rem;">
+    IDENTITY
+  </div>
 
-      <div class="identity-block scroll-fade">
-        <p class="identity-text">
-          I don't write because I have answers.<br>
-          I write because questions deserve a place to live.
-        </p>
-      </div>
+  <div style="max-width: 720px; margin: 0 auto; font-family: var(--font-quote); font-size: 1.45rem; line-height: 1.8; color: var(--text-color); font-style: normal; font-weight: 300;">
+    
+    <!-- Stanza 1 -->
+    <p style="margin-bottom: 3rem;">
+      I don't write because I have answers.<br>
+      I write because questions deserve a place to live.
+    </p>
 
-      <div class="identity-divider"></div>
+    <!-- Small Gold Divider -->
+    <div style="width: 28px; height: 1px; background: var(--accent-gold); opacity: 0.5; margin: 3rem auto;"></div>
 
-      <div class="identity-block scroll-fade">
-        <p class="identity-text">
-          I admire people who build things.<br>
-          Not because they become successful.<br>
-          Because they become different.
-        </p>
-      </div>
+    <!-- Stanza 2 -->
+    <p style="margin-bottom: 3rem;">
+      I admire people who build things.<br>
+      Not because they become successful.<br>
+      Because they become different.
+    </p>
 
-      <div class="identity-divider"></div>
+    <!-- Small Gold Divider -->
+    <div style="width: 28px; height: 1px; background: var(--accent-gold); opacity: 0.5; margin: 3rem auto;"></div>
 
-      <div class="identity-block scroll-fade">
-        <p class="identity-text">
-          Some evenings belong to code.<br>
-          Some belong to books.<br>
-          Some belong to silence.<br>
-          This place remembers all three.
-        </p>
-      </div>
-    </section>
+    <!-- Stanza 3 -->
+    <p style="margin-bottom: 0;">
+      Some evenings belong to code.<br>
+      Some belong to books.<br>
+      Some belong to silence.<br>
+      <span style="color: var(--accent-gold); font-weight: 400; display: inline-block; margin-top: 0.5rem;">This place remembers all three.</span>
+    </p>
 
-    <!-- SECTION 3 — "THINGS THAT BUILT ME" (FLIP CARDS) -->
-    <section id="built-me">
-      <div class="section-label">Pillars</div>
-      <h2
-        style="font-family: var(--font-title); font-size: 2.8rem; text-align: center; font-weight: 300; margin-bottom: 2rem;">
-        Things That Built Me</h2>
+  </div>
+</section>
 
-      <div class="pillars-grid">
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="pillar-num">01</div>
-              <div class="pillar-title">Curiosity</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <p class="pillar-desc">The persistent habit of asking "why?" instead of simply "how?"</p>
-            </div>
+
+    <!-- IMMERSIVE PERSPECTIVE DIVIDER -->
+    <!-- <div align="center" style="margin: 5rem 0 3rem 0; padding: 0 1rem;">
+      <p style="font-family: var(--font-title); font-size: 1.15rem; color: var(--muted-text); letter-spacing: 0.05em; line-height: 1.8; font-weight: 300; max-width: 520px; margin: 0 auto;">
+        Every journal reveals a voice.<br>
+        Every observer notices a different story.<br>
+        <span style="font-style: italic; color: var(--accent-gold);">Perhaps somewhere between the two, a person begins to appear.</span>
+      </p>
+      <div style="width: 40px; height: 1px; background: var(--accent-gold); opacity: 0.4; margin: 2rem auto 0 auto;"></div>
+    </div> -->
+
+    <!-- SECTIONS 3 & 4: THE QUIET OBSERVATIONS -->
+    <style>
+      .observations-container {
+        display: flex;
+        flex-direction: column;
+        gap: 4.5rem;
+        margin-top: 4rem;
+        position: relative;
+      }
+
+      .observations-container::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: linear-gradient(to bottom, transparent, var(--accent-gold), transparent);
+        opacity: 0.4;
+      }
+
+      .observation-chapter {
+        padding-left: 2.5rem;
+        position: relative;
+      }
+
+      .observation-chapter::before {
+        content: "◆";
+        position: absolute;
+        left: -5px;
+        top: 0.2rem;
+        font-size: 0.6rem;
+        color: var(--accent-gold);
+      }
+
+      .chapter-num {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.25em;
+        color: var(--accent-gold);
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+
+      .chapter-title {
+        font-family: var(--font-title);
+        font-size: 2.2rem;
+        font-weight: 400;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        line-height: 1.2;
+      }
+
+      .chapter-lead {
+        font-family: var(--font-quote);
+        font-style: italic;
+        color: var(--muted-text);
+        font-size: 1.05rem;
+        margin-bottom: 0.6rem;
+      }
+
+      .chapter-body p {
+        font-size: 1.05rem;
+        color: rgba(13, 27, 42, 0.88);
+        font-weight: 300;
+        line-height: 1.9;
+        margin-bottom: 0;
+      }
+
+      @media (max-width: 768px) {
+        .observation-chapter {
+          padding-left: 1.5rem;
+        }
+      }
+    </style>
+
+    <section id="observations">
+      <div class="section-label">Portrait</div>
+      <h2 style="font-family: var(--font-title); font-size: 3rem; text-align: center; font-weight: 300; margin-bottom: 0.8rem;">
+        The Quiet Observations
+      </h2>
+      <p style="font-family: var(--font-quote); font-style: italic; font-size: 1.2rem; text-align: center; color: var(--muted-text); margin-bottom: 4rem; max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+        "No biography could ever capture a person completely.<br>
+        Perhaps a few honest observations can come close."
+      </p>
+
+      <div class="observations-container">
+
+        <!-- OBSERVATION I -->
+        <article class="observation-chapter scroll-fade">
+          <div class="chapter-num">Observation I</div>
+          <h3 class="chapter-title">Where Questions Stay</h3>
+          <div class="chapter-body">
+            <p class="chapter-lead">Spend enough time around Dhruv, and you'll notice one thing almost immediately.</p>
+            <p>
+              Questions have always fascinated Dhruv more than answers. He naturally follows ideas beyond the obvious, believing that every layer uncovered leads to another worth exploring.
+            </p>
           </div>
-        </div>
+        </article>
 
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="pillar-num">02</div>
-              <div class="pillar-title">Stillness</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <p class="pillar-desc">Learning that peace isn't something found out in the world. It is practiced within.
-              </p>
-            </div>
+        <!-- OBSERVATION II -->
+        <article class="observation-chapter scroll-fade">
+          <div class="chapter-num">Observation II</div>
+          <h3 class="chapter-title">The Quiet Pursuit</h3>
+          <div class="chapter-body">
+            <p class="chapter-lead">One thing becomes clear rather quickly.</p>
+            <p>
+              Whether it's software, an idea, a perspective, or a better version of himself, Dhruv is rarely standing still. Building, for him, has never been about recognition—it's simply how he chooses to move through life.
+            </p>
           </div>
-        </div>
+        </article>
 
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="pillar-num">03</div>
-              <div class="pillar-title">Building</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <p class="pillar-desc">The quiet joy of turning tiny, fragile ideas into meaningful, enduring systems.</p>
-            </div>
+        <!-- OBSERVATION III -->
+        <article class="observation-chapter scroll-fade">
+          <div class="chapter-num">Observation III</div>
+          <h3 class="chapter-title">In Search of Meaning</h3>
+          <div class="chapter-body">
+            <p class="chapter-lead">It doesn't take many conversations to realize this.</p>
+            <p>
+              He isn't searching for certainty; he's searching for meaning. The conversations he values, the books he reads, and the questions he asks all reflect a quiet desire to understand the world—and himself—a little more deeply.
+            </p>
           </div>
-        </div>
+        </article>
 
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="pillar-num">04</div>
-              <div class="pillar-title">Wonder</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <p class="pillar-desc">Mountains. Old libraries. Unhurried walks. Quiet cafés in forgotten corners.</p>
-            </div>
+        <!-- OBSERVATION IV -->
+        <article class="observation-chapter scroll-fade">
+          <div class="chapter-num">Observation IV</div>
+          <h3 class="chapter-title">What Stays Behind</h3>
+          <div class="chapter-body">
+            <p class="chapter-lead">Long after a conversation ends, this is often what remains.</p>
+            <p>
+              Not because he was the loudest voice in the room, but because of the calm he leaves behind. A thoughtful conversation, a different perspective, or simply the feeling that, for a moment, everything slowed down.
+            </p>
           </div>
-        </div>
-      </div>
-    </section>
+        </article>
 
-    <!-- SECTION 4 — "THE COMPASS" (FLIP CARDS) -->
-    <section id="compass">
-      <div class="section-label">Orientation</div>
-      <h2
-        style="font-family: var(--font-title); font-size: 2.8rem; text-align: center; font-weight: 300; margin-bottom: 2rem;">
-        The Compass</h2>
-
-      <div class="compass-grid">
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="compass-dir">NORTH</div>
-              <div class="compass-label-text">What I'm Chasing</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <div class="compass-val">Creating things that outlive me.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="compass-dir">EAST</div>
-              <div class="compass-label-text">Currently Learning</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <div class="compass-val">Distributed Systems & Consciousness</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="compass-dir">SOUTH</div>
-              <div class="compass-label-text">Trying to Improve</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <div class="compass-val">Patience.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="flip-card scroll-fade" onclick="this.classList.toggle('flipped')">
-          <div class="flip-card-inner">
-            <div class="flip-card-front">
-              <div class="compass-dir">WEST</div>
-              <div class="compass-label-text">Seeking Alignment</div>
-              <span class="flip-hint">Hover / Tap to flip</span>
-            </div>
-            <div class="flip-card-back">
-              <div class="compass-val">Simplicity & Clarity</div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
