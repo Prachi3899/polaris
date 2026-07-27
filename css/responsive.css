@@ -1,0 +1,28 @@
+@media (max-width: 768px) {
+      body {
+        background-attachment: scroll;
+        background-position: center top;
+        background-size: cover;
+      }
+
+      .hero-title-devanagari {
+        font-size: 3rem;
+      }
+
+      .hero-quote {
+        font-size: 1.4rem;
+      }
+
+      section {
+        padding: 5rem 1.5rem;
+      }
+
+      .entry {
+        padding: 1.5rem;
+      }
+
+      #writer-desk {
+        padding: 1.5rem;
+        border-width: 6px;
+      }
+    }

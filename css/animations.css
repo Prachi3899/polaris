@@ -1,0 +1,56 @@
+/* --- AMBIENT PARTICLES --- */
+    .particle {
+      position: fixed;
+      pointer-events: none;
+      background: rgba(13, 27, 42, 0.12);
+      border-radius: 50%;
+      animation: floatUp 22s infinite linear;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.35;
+      }
+
+      80% {
+        opacity: 0.35;
+      }
+
+      100% {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* --- COMMON SECTION STYLING --- */
+    
+
+    /* SCROLL ANIMATION */
+    .scroll-fade {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1.2s ease, transform 1.2s ease;
+    }
+
+    .scroll-fade.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(8px);
+      }
+    }
