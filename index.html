@@ -587,8 +587,8 @@
       color: #fff;
     }
 
-    /* FIRST OPENING MODAL & LOADING SCREEN */
-    #observer-modal-overlay, #observer-loading-screen {
+    /* LOADING SCREEN OVERLAY */
+    #observer-loading-screen {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
@@ -598,43 +598,6 @@
       justify-content: center;
       align-items: center;
       padding: 2rem;
-    }
-
-    .modal-box {
-      background: #FFF9EF;
-      border: 1px solid var(--accent-gold);
-      padding: 2.5rem;
-      border-radius: 8px;
-      max-width: 480px;
-      text-align: center;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-    }
-
-    .modal-box h3 {
-      font-family: var(--font-title);
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      color: var(--text-color);
-    }
-
-    .modal-box p {
-      font-family: var(--font-quote);
-      font-style: italic;
-      font-size: 1.2rem;
-      color: #5D4037;
-      line-height: 1.7;
-      margin-bottom: 2rem;
-    }
-
-    .modal-btn {
-      background: var(--text-color);
-      color: var(--bg-color);
-      border: none;
-      padding: 0.6rem 1.4rem;
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      cursor: pointer;
-      border-radius: 3px;
     }
 
     /* FOOTER */
@@ -690,15 +653,6 @@
 
   <!-- PUBLISH TOAST NOTIFICATION -->
   <div id="publish-toast">Another piece of you, quietly saved</div>
-
-  <!-- FIRST OPENING OVERLAY MODAL -->
-  <div id="observer-modal-overlay">
-    <div class="modal-box">
-      <h3>✦ Before you write...</h3>
-      <p>Every blank page carries a question.<br><br>I wonder what version of yourself<br>you will leave here today.<br><br><span style="font-size: 0.95rem; opacity: 0.85;">— someone who notices</span></p>
-      <button class="modal-btn" onclick="closeFirstOpeningModal()">Continue writing →</button>
-    </div>
-  </div>
 
   <!-- LOADING SCREEN OVERLAY -->
   <div id="observer-loading-screen">
@@ -1249,12 +1203,6 @@
         if (desk) desk.classList.remove("closing");
         if (dateElem) dateElem.textContent = this.getDynamicDateString();
 
-        // FIRST OPENING OVERLAY CHECK
-        if (!this.memory.hasOpenedFirstTime) {
-          document.getElementById("observer-modal-overlay").style.display = "flex";
-          return;
-        }
-
         // LOADING SCREEN SEQUENCE
         const loadingScreen = document.getElementById("observer-loading-screen");
         const loadingText = document.getElementById("loading-text");
@@ -1314,13 +1262,6 @@
         clearTimeout(this.idleTimer);
       }
     };
-
-    function closeFirstOpeningModal() {
-      Companion.memory.hasOpenedFirstTime = true;
-      Companion.saveMemory();
-      document.getElementById("observer-modal-overlay").style.display = "none";
-      Companion.open();
-    }
   </script>
 
   <!-- MAIN SCRIPT -->
