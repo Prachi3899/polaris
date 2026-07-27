@@ -41,9 +41,12 @@
       font-family: var(--font-body);
       line-height: 1.8;
       overflow-x: hidden;
+
+      /* Fallback & Desktop background styling */
       background-image: linear-gradient(rgba(245, 241, 232, 0.90), rgba(245, 241, 232, 0.92)),
         url('./bg.jpg');
-      background-position: center;
+      background-position: center center;
+      background-repeat: no-repeat;
       background-size: cover;
       background-attachment: fixed;
     }
@@ -366,11 +369,19 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
       position: relative;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      scroll-margin-top: 2rem;
     }
 
     .entry:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+    }
+
+    .entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
     }
 
     .entry-title {
@@ -379,6 +390,25 @@
       font-weight: 600;
       line-height: 1.2;
       margin-bottom: 0.4rem;
+    }
+
+    .entry-share-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--muted-text);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      font-family: var(--font-body);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .entry-share-btn:hover {
+      background: var(--text-color);
+      color: var(--bg-color);
+      border-color: var(--text-color);
     }
 
     .entry-meta {
@@ -535,6 +565,7 @@
       color: var(--muted-text);
     }
 
+    .desk-btn-share,
     .desk-btn-edit,
     .desk-btn-delete {
       background: transparent;
@@ -543,6 +574,16 @@
       cursor: pointer;
       border-radius: 2px;
       transition: all 0.2s ease;
+    }
+
+    .desk-btn-share {
+      border: 1px solid var(--accent-gold);
+      color: var(--text-color);
+    }
+
+    .desk-btn-share:hover {
+      background: var(--accent-gold);
+      color: #fff;
     }
 
     .desk-btn-edit {
@@ -580,6 +621,13 @@
 
     @media (max-width: 768px) {
 
+      body {
+        /* Fixes zoomed background on mobile browsers */
+        background-attachment: scroll;
+        background-position: center top;
+        background-size: cover;
+      }
+
       .pillars-grid,
       .compass-grid {
         grid-template-columns: 1fr;
@@ -610,10 +658,6 @@
         padding: 1.5rem;
         border-width: 6px;
       }
-
-      body {
-        background-attachment: scroll;
-      }
     }
   </style>
 </head>
@@ -628,7 +672,7 @@
   <!-- MOLESKINE WRITING DESK (PRIVATE OVERLAY EDITOR) -->
   <div id="writer-desk-overlay">
     <div id="writer-desk">
-      <div class="desk-date" id="desk-current-date">July 26, 2026 • Private Notebook</div>
+      <div class="desk-date" id="desk-current-date">July 27, 2026 • Private Notebook</div>
 
       <div class="desk-drafts-bar" id="desk-drafts-container">
         <!-- Dynamic Draft Chips -->
@@ -891,6 +935,24 @@
     let publishedEntries = [];
     let editingArticleId = null;
 
+    // HELPER: COPY SHARE LINK
+    window.copyArticleLink = function(id, btnElement) {
+      const shareUrl = `${window.location.origin}${window.location.pathname}#article-${id}`;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        if (btnElement) {
+          const originalText = btnElement.textContent;
+          btnElement.textContent = '✓ Link Copied!';
+          setTimeout(() => {
+            btnElement.textContent = originalText;
+          }, 2000);
+        } else {
+          alert('Article link copied to clipboard!');
+        }
+      }).catch(err => {
+        console.error('Could not copy text: ', err);
+      });
+    };
+
     document.addEventListener("DOMContentLoaded", () => {
 
       // DOM Elements
@@ -919,6 +981,7 @@
           ...doc.data()
         }));
         renderFeed();
+        checkAndScrollToHash();
       }, (error) => {
         console.error("Firestore snapshot error:", error);
       });
@@ -933,11 +996,15 @@
         publishedEntries.forEach((entry) => {
           const article = document.createElement('article');
           article.className = 'entry scroll-fade visible';
+          article.id = `article-${entry.id}`;
 
           const formattedBody = entry.body ? entry.body.replace(/\n/g, '</p><p>') : '';
 
           article.innerHTML = `
-            <h1 class="entry-title">${entry.title || 'Untitled'}</h1>
+            <div class="entry-header">
+              <h1 class="entry-title">${entry.title || 'Untitled'}</h1>
+              <button class="entry-share-btn" onclick="copyArticleLink('${entry.id}', this)">🔗 Share</button>
+            </div>
             <div class="entry-meta">${entry.date || ''} • Journal</div>
             <div class="entry-content"><p>${formattedBody}</p></div>
           `;
@@ -947,7 +1014,19 @@
         renderDeskPublishedList();
       }
 
-      // 4. RENDER PUBLISHED LIST INSIDE DESK
+      // 4. CHECK URL HASH FOR DIRECT LINKING
+      function checkAndScrollToHash() {
+        if (window.location.hash) {
+          const targetEl = document.querySelector(window.location.hash);
+          if (targetEl) {
+            setTimeout(() => {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+          }
+        }
+      }
+
+      // 5. RENDER PUBLISHED LIST INSIDE DESK
       function renderDeskPublishedList() {
         const container = document.getElementById('desk-published-container');
         if (!container) return;
@@ -967,11 +1046,13 @@
               <span class="desk-item-date">${entry.date || ''}</span>
             </div>
             <div style="display: flex; gap: 0.4rem;">
+              <button class="desk-btn-share" data-id="${entry.id}">🔗 Share</button>
               <button class="desk-btn-edit" data-id="${entry.id}">✏️ Edit</button>
               <button class="desk-btn-delete" data-id="${entry.id}">🗑️ Delete</button>
             </div>
           `;
 
+          item.querySelector('.desk-btn-share').addEventListener('click', (e) => copyArticleLink(entry.id, e.target));
           item.querySelector('.desk-btn-edit').addEventListener('click', () => editPublishedEntry(entry.id));
           item.querySelector('.desk-btn-delete').addEventListener('click', () => deletePublishedEntry(entry.id));
 
@@ -996,7 +1077,7 @@
         }
       }
 
-      // 5. OVERLAY DESK TOGGLES
+      // 6. OVERLAY DESK TOGGLES
       window.openDesk = function () {
         if (deskOverlay) deskOverlay.style.display = 'block';
         renderDrafts();
@@ -1039,7 +1120,7 @@
         });
       }
 
-      // 6. DRAFTS MANAGEMENT
+      // 7. DRAFTS MANAGEMENT
       let drafts = JSON.parse(localStorage.getItem('dhruv_moleskine_drafts')) || [
         { id: '1', title: 'Untitled Reflection', body: '' }
       ];
@@ -1108,7 +1189,7 @@
       if (postTitle) postTitle.addEventListener('input', saveDraft);
       if (postBody) postBody.addEventListener('input', saveDraft);
 
-      // 7. PUBLISH TO FIREBASE
+      // 8. PUBLISH TO FIREBASE
       window.publishThought = function () {
         if (!postBody || !postBody.value.trim()) return;
 
