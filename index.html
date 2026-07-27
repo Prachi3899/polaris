@@ -42,7 +42,6 @@
       line-height: 1.8;
       overflow-x: hidden;
 
-      /* Fallback & Desktop background styling */
       background-image: linear-gradient(rgba(245, 241, 232, 0.90), rgba(245, 241, 232, 0.92)),
         url('./bg.jpg');
       background-position: center center;
@@ -114,69 +113,7 @@
       transform: translateY(0);
     }
 
-    /* FLIP CARD ARCHITECTURE */
-    .flip-card {
-      background-color: transparent;
-      height: 200px;
-      perspective: 1000px;
-      cursor: pointer;
-    }
-
-    .flip-card-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      text-align: left;
-      transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
-      transform-style: preserve-3d;
-    }
-
-    .flip-card:hover .flip-card-inner,
-    .flip-card.flipped .flip-card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .flip-card-front,
-    .flip-card-back {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
-      border-radius: 4px;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .flip-card-front {
-      background: rgba(255, 255, 255, 0.8);
-      border: 1px solid var(--border-color);
-      border-left: 3px solid var(--accent-gold);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-    }
-
-    .flip-card-back {
-      background: var(--text-color);
-      color: var(--bg-color);
-      transform: rotateY(180deg);
-      border-left: 3px solid var(--accent-gold);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    }
-
-    .flip-hint {
-      position: absolute;
-      bottom: 1rem;
-      right: 1.2rem;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      opacity: 0.6;
-    }
-
-    /* SECTION 1 — "MEET DHRUV" */
+    /* HERO SECTION */
     #hero {
       min-height: 100vh;
       display: flex;
@@ -239,89 +176,9 @@
       }
     }
 
-    /* SECTION 2 — "NOT A BIOGRAPHY" */
+    /* IDENTITY SECTION */
     #identity {
       text-align: center;
-    }
-
-    .identity-block {
-      margin-bottom: 4rem;
-    }
-
-    .identity-text {
-      font-family: var(--font-title);
-      font-size: 2.2rem;
-      font-weight: 300;
-      line-height: 1.6;
-      color: var(--text-color);
-    }
-
-    .identity-divider {
-      width: 40px;
-      height: 1px;
-      background: var(--accent-gold);
-      margin: 3.5rem auto;
-      opacity: 0.6;
-    }
-
-    /* SECTION 3 — "THE PERSON BEFORE THE STORY" */
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2.5rem;
-      margin-top: 3rem;
-    }
-
-    .pillar-num {
-      font-family: var(--font-title);
-      font-size: 1.1rem;
-      color: var(--accent-gold);
-      margin-bottom: 0.2rem;
-    }
-
-    .pillar-title {
-      font-family: var(--font-title);
-      font-size: 2.2rem;
-      font-weight: 600;
-    }
-
-    .pillar-desc {
-      font-size: 0.95rem;
-      color: var(--bg-color);
-      font-weight: 300;
-      line-height: 1.6;
-    }
-
-    /* SECTION 4 — "THE COMPASS" */
-    .compass-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2.5rem;
-      margin-top: 3rem;
-    }
-
-    .compass-dir {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
-      color: var(--accent-gold);
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-
-    .compass-label-text {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted-text);
-    }
-
-    .compass-val {
-      font-family: var(--font-title);
-      font-size: 1.8rem;
-      font-weight: 500;
-      line-height: 1.35;
-      color: var(--bg-color);
     }
 
     /* SECTION 5 — "LETTERS NEVER SENT" */
@@ -440,11 +297,17 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(13, 27, 42, 0.6);
-      backdrop-filter: blur(5px);
+      background: rgba(13, 27, 42, 0.65);
+      backdrop-filter: blur(6px);
       z-index: 999;
       overflow-y: auto;
       padding: 3rem 1rem;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+
+    #writer-desk-overlay.visible {
+      opacity: 1;
     }
 
     #writer-desk {
@@ -456,13 +319,110 @@
       position: relative;
       margin: 0 auto;
       max-width: 800px;
+      transition: transform 0.6s ease, opacity 0.6s ease;
+    }
+
+    /* GENTLE CLOSING ANIMATION CLASS */
+    #writer-desk.closing {
+      opacity: 0;
+      transform: scale(0.97) translateY(10px);
+    }
+
+    .desk-date-container {
+      margin-bottom: 0.8rem;
     }
 
     .desk-date {
       font-family: var(--font-quote);
       font-style: italic;
       color: var(--muted-text);
-      margin-bottom: 1rem;
+    }
+
+    .desk-first-ps {
+      font-family: var(--font-quote);
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--accent-gold);
+      margin-top: 0.2rem;
+      display: none;
+    }
+
+    /* PUBLISH TOAST NOTIFICATION */
+    #publish-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(13, 27, 42, 0.92);
+      color: #FFF9EF;
+      font-family: var(--font-quote);
+      font-style: italic;
+      font-size: 1.1rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: 30px;
+      border: 1px solid var(--accent-gold);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 3000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    #publish-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* INLINE CURSOR SPEECH BUBBLE TOOLTIP */
+    #cursor-whisper-tooltip {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      z-index: 1050;
+      font-family: var(--font-quote);
+      font-style: italic;
+      font-size: 0.9rem;
+      color: #795548;
+      background: #FFF9EF;
+      border: 1.5px solid #E0C097;
+      padding: 0.35rem 0.85rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      opacity: 0;
+      transform: translateY(-100%) translateY(-12px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      white-space: nowrap;
+    }
+
+    #cursor-whisper-tooltip::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 18px;
+      width: 10px;
+      height: 10px;
+      background: #FFF9EF;
+      border-right: 1.5px solid #E0C097;
+      border-bottom: 1.5px solid #E0C097;
+      transform: rotate(45deg);
+    }
+
+    #cursor-whisper-tooltip.visible {
+      opacity: 1;
+      transform: translateY(-100%) translateY(-8px);
+    }
+
+    /* TEXT MIRROR FOR CURSOR POSITION TRACKING */
+    #text-mirror-box {
+      position: absolute;
+      visibility: hidden;
+      height: auto;
+      width: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow: hidden;
+      top: -9999px;
+      left: -9999px;
     }
 
     .desk-title-input {
@@ -481,7 +441,7 @@
 
     .desk-body-input {
       width: 100%;
-      min-height: 250px;
+      min-height: 320px;
       background: repeating-linear-gradient(transparent, transparent 31px, rgba(13, 27, 42, 0.08) 31px, rgba(13, 27, 42, 0.08) 32px);
       border: none;
       outline: none;
@@ -490,6 +450,27 @@
       line-height: 32px;
       color: var(--text-color);
       resize: vertical;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .desk-body-input.fade-in {
+      opacity: 1;
+    }
+
+    .desk-body-input::placeholder {
+      color: var(--muted-text);
+      opacity: 0.55;
+      font-style: italic;
+      font-family: var(--font-quote);
+      font-size: 1.15rem;
+      line-height: 1.8;
+      transition: opacity 0.4s ease;
+      white-space: pre-wrap;
+    }
+
+    .desk-body-input.placeholder-fading::placeholder {
+      opacity: 0 !important;
     }
 
     .desk-drafts-bar {
@@ -606,6 +587,56 @@
       color: #fff;
     }
 
+    /* FIRST OPENING MODAL & LOADING SCREEN */
+    #observer-modal-overlay, #observer-loading-screen {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(13, 27, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .modal-box {
+      background: #FFF9EF;
+      border: 1px solid var(--accent-gold);
+      padding: 2.5rem;
+      border-radius: 8px;
+      max-width: 480px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+
+    .modal-box h3 {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+    }
+
+    .modal-box p {
+      font-family: var(--font-quote);
+      font-style: italic;
+      font-size: 1.2rem;
+      color: #5D4037;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    .modal-btn {
+      background: var(--text-color);
+      color: var(--bg-color);
+      border: none;
+      padding: 0.6rem 1.4rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
     /* FOOTER */
     footer {
       text-align: center;
@@ -620,18 +651,10 @@
     }
 
     @media (max-width: 768px) {
-
       body {
-        /* Fixes zoomed background on mobile browsers */
         background-attachment: scroll;
         background-position: center top;
         background-size: cover;
-      }
-
-      .pillars-grid,
-      .compass-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
       }
 
       .hero-title-devanagari {
@@ -640,10 +663,6 @@
 
       .hero-quote {
         font-size: 1.4rem;
-      }
-
-      .identity-text {
-        font-size: 1.6rem;
       }
 
       section {
@@ -669,10 +688,38 @@
   <div class="particle" style="width: 6px; height: 6px; left: 45%; animation-duration: 18s;"></div>
   <div class="particle" style="width: 3px; height: 3px; left: 75%; animation-duration: 25s;"></div>
 
+  <!-- PUBLISH TOAST NOTIFICATION -->
+  <div id="publish-toast">Another piece of you, quietly saved</div>
+
+  <!-- FIRST OPENING OVERLAY MODAL -->
+  <div id="observer-modal-overlay">
+    <div class="modal-box">
+      <h3>✦ Before you write...</h3>
+      <p>Every blank page carries a question.<br><br>I wonder what version of yourself<br>you will leave here today.<br><br><span style="font-size: 0.95rem; opacity: 0.85;">— someone who notices</span></p>
+      <button class="modal-btn" onclick="closeFirstOpeningModal()">Continue writing →</button>
+    </div>
+  </div>
+
+  <!-- LOADING SCREEN OVERLAY -->
+  <div id="observer-loading-screen">
+    <div style="font-family: var(--font-quote); font-style: italic; color: #FFF9EF; font-size: 1.6rem; text-align: center;" id="loading-text">
+      Finding your thoughts...
+    </div>
+  </div>
+
   <!-- MOLESKINE WRITING DESK (PRIVATE OVERLAY EDITOR) -->
   <div id="writer-desk-overlay">
     <div id="writer-desk">
-      <div class="desk-date" id="desk-current-date">July 27, 2026 • Private Notebook</div>
+      
+      <!-- DATE AREA WITH CLEAN SIGNATURE -->
+      <div class="desk-date-container">
+        <div class="desk-date" id="desk-current-date">July 27, 2026 • Private Notebook</div>
+        <div class="desk-first-ps" id="desk-first-ps">"P.S. — I hope you know someone is always cheering for the person behind these pages."</div>
+      </div>
+      
+      <!-- INLINE CURSOR POPUP TOOLTIP -->
+      <div id="cursor-whisper-tooltip"></div>
+      <div id="text-mirror-box"></div>
 
       <div class="desk-drafts-bar" id="desk-drafts-container">
         <!-- Dynamic Draft Chips -->
@@ -707,6 +754,12 @@
           <!-- Rendered dynamically -->
         </div>
       </div>
+
+      <!-- PERSONAL SIGNATURE FOOTER -->
+      <div style="text-align: center; margin-top: 1.5rem; font-size: 0.75rem; color: var(--muted-text); letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7;">
+        Built for the thinker. Maintained by the observer.
+      </div>
+
     </div>
   </div>
 
@@ -728,57 +781,36 @@
       <a href="#identity" class="scroll-indicator">↓ Scroll to enter</a>
     </section>
 
- 
-<!-- SECTION 2: IDENTITY -->
-<section id="identity" style="padding: 5rem 1rem 3rem 1rem; text-align: center;">
-  
-  <!-- Section Label -->
-  <div class="section-label" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent-gold); font-weight: 500; margin-bottom: 3.5rem;">
-    IDENTITY
-  </div>
+    <!-- SECTION 2: IDENTITY -->
+    <section id="identity" style="padding: 5rem 1rem 3rem 1rem; text-align: center;">
+      <div class="section-label" style="font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.25em; color: var(--accent-gold); font-weight: 500; margin-bottom: 3.5rem;">
+        IDENTITY
+      </div>
 
-  <div style="max-width: 720px; margin: 0 auto; font-family: var(--font-quote); font-size: 1.45rem; line-height: 1.8; color: var(--text-color); font-style: normal; font-weight: 300;">
-    
-    <!-- Stanza 1 -->
-    <p style="margin-bottom: 3rem;">
-      I don't write because I have answers.<br>
-      I write because questions deserve a place to live.
-    </p>
+      <div style="max-width: 720px; margin: 0 auto; font-family: var(--font-quote); font-size: 1.45rem; line-height: 1.8; color: var(--text-color); font-style: normal; font-weight: 300;">
+        <p style="margin-bottom: 3rem;">
+          I don't write because I have answers.<br>
+          I write because questions deserve a place to live.
+        </p>
 
-    <!-- Small Gold Divider -->
-    <div style="width: 28px; height: 1px; background: var(--accent-gold); opacity: 0.5; margin: 3rem auto;"></div>
+        <div style="width: 28px; height: 1px; background: var(--accent-gold); opacity: 0.5; margin: 3rem auto;"></div>
 
-    <!-- Stanza 2 -->
-    <p style="margin-bottom: 3rem;">
-      I admire people who build things.<br>
-      Not because they become successful.<br>
-      Because they become different.
-    </p>
+        <p style="margin-bottom: 3rem;">
+          I admire people who build things.<br>
+          Not because they become successful.<br>
+          Because they become different.
+        </p>
 
-    <!-- Small Gold Divider -->
-    <div style="width: 28px; height: 1px; background: var(--accent-gold); opacity: 0.5; margin: 3rem auto;"></div>
+        <div style="width: 28px; height: 1px; background: var(--accent-gold); opacity: 0.5; margin: 3rem auto;"></div>
 
-    <!-- Stanza 3 -->
-    <p style="margin-bottom: 0;">
-      Some evenings belong to code.<br>
-      Some belong to books.<br>
-      Some belong to silence.<br>
-      <span style="color: var(--accent-gold); font-weight: 400; display: inline-block; margin-top: 0.5rem;">This place remembers all three.</span>
-    </p>
-
-  </div>
-</section>
-
-
-    <!-- IMMERSIVE PERSPECTIVE DIVIDER -->
-    <!-- <div align="center" style="margin: 5rem 0 3rem 0; padding: 0 1rem;">
-      <p style="font-family: var(--font-title); font-size: 1.15rem; color: var(--muted-text); letter-spacing: 0.05em; line-height: 1.8; font-weight: 300; max-width: 520px; margin: 0 auto;">
-        Every journal reveals a voice.<br>
-        Every observer notices a different story.<br>
-        <span style="font-style: italic; color: var(--accent-gold);">Perhaps somewhere between the two, a person begins to appear.</span>
-      </p>
-      <div style="width: 40px; height: 1px; background: var(--accent-gold); opacity: 0.4; margin: 2rem auto 0 auto;"></div>
-    </div> -->
+        <p style="margin-bottom: 0;">
+          Some evenings belong to code.<br>
+          Some belong to books.<br>
+          Some belong to silence.<br>
+          <span style="color: var(--accent-gold); font-weight: 400; display: inline-block; margin-top: 0.5rem;">This place remembers all three.</span>
+        </p>
+      </div>
+    </section>
 
     <!-- SECTIONS 3 & 4: THE QUIET OBSERVATIONS -->
     <style>
@@ -867,7 +899,6 @@
       </p>
 
       <div class="observations-container">
-
         <!-- OBSERVATION I -->
         <article class="observation-chapter scroll-fade">
           <div class="chapter-num">Observation I</div>
@@ -915,7 +946,6 @@
             </p>
           </div>
         </article>
-
       </div>
     </section>
 
@@ -952,6 +982,349 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
+  <!-- ==========================================
+       POLARIS COMPANION ENGINE MODULE
+       ========================================== -->
+  <script>
+    const Companion = {
+      sessionStart: null,
+      lastLength: 0,
+      deleteSequenceCount: 0,
+      idleTimer: null,
+      whisperTimer: null,
+
+      hasTriggered500: false,
+      hasTriggered1000: false,
+
+      memory: JSON.parse(localStorage.getItem("polaris_companion_data")) || {
+        lastVisit: null,
+        totalSessions: 0,
+        streakDays: 0,
+        lastStreakDate: null,
+        lastPlaceholderIdx: -1,
+        hasOpenedFirstTime: false
+      },
+
+      // DYNAMIC SINGLE-LINE PLACEHOLDERS POOL
+      placeholdersPool: [
+        // Everyday Opening Notes
+        "Another blank page. I wonder what thoughts found their way here today.",
+        "Before you write anything... I hope you remember that your thoughts are worth keeping.",
+        "A quiet corner for a curious mind. Take your time here.",
+        "Some pages hold stories. Some pages hold pieces of a person.",
+        "Welcome back. Another day, another thought waiting to be discovered.",
+        "I hope you never lose the habit of questioning the world around you.",
+        "Not every thought needs an answer. Some just need a place to exist.",
+        "The page is empty. But knowing you, the thoughts probably aren't.",
+        
+        // More "Prachi Presence" (subtle love)
+        "I don't know what you will write today... but I know it will be something worth knowing.",
+        "Somewhere between your thoughts and these pages, a little piece of you stays forever.",
+        "You spend so much time building things. I hope you remember to build moments for yourself too.",
+        "The world may notice what you create. I hope you always notice who you are becoming.",
+        "I hope this place reminds you of something simple — you are more than your achievements.",
+        "Keep writing. Some stories deserve to exist even before they are understood.",
+        
+        // When he opens late at night 🌙
+        "Late night pages have a different honesty. Maybe today’s thoughts belong here.",
+        "Everyone is asleep. But some thoughts choose the quiet hours.",
+        "Midnight and a blank page. A combination where your mind usually has the most to say.",
+        "If you are here this late, I hope you are being kind to yourself.",
+        "The world got quieter. Maybe that's why the thoughts got louder.",
+        
+        // When he is stuck/confused while writing
+        "Still searching for the right words? Take your time. The honest ones usually arrive slowly.",
+        "You don't have to make every thought perfect. Some beautiful things begin unfinished.",
+        "A pause is not a stop. Sometimes the mind is just arranging its thoughts.",
+        "I think you already know what you want to say. You are just finding the courage to write it.",
+        
+        // Dhruv's Polaris theme
+        "Every star has a story. I'm glad you chose to write yours.",
+        "The world looks at what the star shines. Someone will always wonder what the star carries inside.",
+        "Dhruv, even the brightest stars need a place to rest.",
+        "A compass helps people find direction. But even a compass needs a moment of stillness.",
+        "Keep exploring. Keep building. Keep becoming.",
+        
+        // Hidden signature lines
+        "Someone noticed the little things too.",
+        "Written by you. Remembered by someone.",
+        "Some people read stories. Some people notice the person behind them.",
+        "You may forget this moment someday. But someone will remember it.",
+        "I hope you see yourself the way someone who believes in you sees you."
+      ],
+
+      deletionWhispers: [
+        "It's okay to start again.",
+        "The first draft is only for you.",
+        "Nothing was lost. Try again.",
+        "Thinking too much?",
+        "Don't edit your feelings before they've existed.",
+        "You don't have to find the perfect sentence.",
+        "Just write the true one.",
+        "Nobody else has to read this.",
+        "I'm listening, not judging."
+      ],
+
+      pickFreshPlaceholder() {
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * this.placeholdersPool.length);
+        } while (idx === this.memory.lastPlaceholderIdx && this.placeholdersPool.length > 1);
+
+        this.memory.lastPlaceholderIdx = idx;
+        this.saveMemory();
+        return this.placeholdersPool[idx];
+      },
+
+      saveMemory() {
+        localStorage.setItem("polaris_companion_data", JSON.stringify(this.memory));
+      },
+
+      setPlaceholderAnimated(editor, text) {
+        editor.classList.add("placeholder-fading");
+        setTimeout(() => {
+          editor.placeholder = text;
+          editor.classList.remove("placeholder-fading");
+        }, 350);
+      },
+
+      getCursorCoordinates(textarea) {
+        const mirror = document.getElementById("text-mirror-box");
+        if (!mirror) return { top: 0, left: 0 };
+
+        const style = window.getComputedStyle(textarea);
+        mirror.style.width = style.width;
+        mirror.style.fontFamily = style.fontFamily;
+        mirror.style.fontSize = style.fontSize;
+        mirror.style.lineHeight = style.lineHeight;
+        mirror.style.padding = style.padding;
+        mirror.style.boxSizing = style.boxSizing;
+
+        const selectionEnd = textarea.selectionEnd || 0;
+        const textBeforeCursor = textarea.value.substring(0, selectionEnd);
+
+        mirror.textContent = textBeforeCursor;
+        const span = document.createElement("span");
+        span.textContent = "|";
+        mirror.appendChild(span);
+
+        const textareaRect = textarea.getBoundingClientRect();
+        const deskRect = document.getElementById("writer-desk").getBoundingClientRect();
+
+        const relativeTop = textareaRect.top - deskRect.top + span.offsetTop - textarea.scrollTop;
+        const relativeLeft = textareaRect.left - deskRect.left + span.offsetLeft;
+
+        return { top: relativeTop, left: relativeLeft };
+      },
+
+      whisper(msg, duration = 4000) {
+        const tooltip = document.getElementById("cursor-whisper-tooltip");
+        const editor = document.getElementById("post-body");
+        if (!tooltip || !editor) return;
+
+        clearTimeout(this.whisperTimer);
+
+        const pos = this.getCursorCoordinates(editor);
+        tooltip.style.top = `${pos.top}px`;
+        tooltip.style.left = `${pos.left}px`;
+        tooltip.textContent = msg;
+
+        tooltip.classList.add("visible");
+
+        this.whisperTimer = setTimeout(() => {
+          tooltip.classList.remove("visible");
+        }, duration);
+      },
+
+      getDynamicDateString() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        const psElem = document.getElementById("desk-first-ps");
+
+        if (!this.memory.hasOpenedFirstTime) {
+          if (psElem) psElem.style.display = "block";
+          return `${dateStr} • A page waiting for Dhruv`;
+        }
+
+        if (psElem) psElem.style.display = "none";
+
+        const options = [
+          "Private Notebook",
+          "A page saved for your thoughts",
+          "Another chapter begins",
+          "Still curious. Still building."
+        ];
+        const pick = options[Math.floor(Math.random() * options.length)];
+        return `${dateStr} • ${pick}`;
+      },
+
+      updateStreak() {
+        const todayStr = new Date().toDateString();
+        if (this.memory.lastStreakDate !== todayStr) {
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          
+          if (this.memory.lastStreakDate === yesterday.toDateString()) {
+            this.memory.streakDays++;
+          } else {
+            this.memory.streakDays = 1;
+          }
+          this.memory.lastStreakDate = todayStr;
+          this.saveMemory();
+        }
+
+        if (this.memory.streakDays === 2) {
+          setTimeout(() => this.whisper("Two days. Keep going.", 4000), 1800);
+        } else if (this.memory.streakDays === 7) {
+          setTimeout(() => this.whisper("A week of honesty.", 4000), 1800);
+        } else if (this.memory.streakDays === 30) {
+          setTimeout(() => this.whisper("Thirty conversations with yourself.", 4000), 1800);
+        }
+      },
+
+      bindEvents(editor) {
+        if (!editor || editor.dataset.companionBound) return;
+        editor.dataset.companionBound = "true";
+
+        editor.addEventListener("input", () => {
+          const text = editor.value || "";
+          const currentLength = text.length;
+          const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
+
+          const tooltip = document.getElementById("cursor-whisper-tooltip");
+          if (tooltip) tooltip.classList.remove("visible");
+
+          // EASTER EGGS
+          const lower = text.toLowerCase();
+          if (lower.endsWith("i'm tired") || lower.endsWith("im tired")) {
+            this.whisper("I know.", 3500);
+          } else if (lower.endsWith("i failed")) {
+            this.whisper("You'll write about this differently one day.", 4000);
+          } else if (lower.endsWith("i miss")) {
+            this.whisper("Some people leave gently. Some stay quietly.", 4500);
+          }
+
+          // WORD COUNT MILESTONES
+          if (words >= 500 && !this.hasTriggered500) {
+            this.hasTriggered500 = true;
+            this.whisper("Looks like today had a lot to say.", 4000);
+          } else if (words >= 1000 && !this.hasTriggered1000) {
+            this.hasTriggered1000 = true;
+            this.whisper("That must feel lighter.", 4000);
+          }
+
+          // IDLE CURSOR TIMERS
+          clearTimeout(this.idleTimer);
+          this.idleTimer = setTimeout(() => {
+            this.whisper("Still thinking?");
+            this.idleTimer = setTimeout(() => {
+              this.whisper("No rush. I'm still here.");
+              this.idleTimer = setTimeout(() => {
+                this.whisper("Sometimes staring at the page counts too.");
+              }, 90000);
+            }, 45000);
+          }, 45000);
+
+          // DELETION WHISPERS
+          if (this.lastLength - currentLength > 20) {
+            const idx = Math.min(this.deleteSequenceCount, this.deletionWhispers.length - 1);
+            this.whisper(this.deletionWhispers[idx]);
+            this.deleteSequenceCount++;
+          }
+
+          this.lastLength = currentLength;
+        });
+      },
+
+      open() {
+        this.sessionStart = Date.now();
+        this.deleteSequenceCount = 0;
+        this.hasTriggered500 = false;
+        this.hasTriggered1000 = false;
+
+        const overlay = document.getElementById("writer-desk-overlay");
+        const editor = document.getElementById("post-body");
+        const dateElem = document.getElementById("desk-current-date");
+        const desk = document.getElementById("writer-desk");
+
+        if (desk) desk.classList.remove("closing");
+        if (dateElem) dateElem.textContent = this.getDynamicDateString();
+
+        // FIRST OPENING OVERLAY CHECK
+        if (!this.memory.hasOpenedFirstTime) {
+          document.getElementById("observer-modal-overlay").style.display = "flex";
+          return;
+        }
+
+        // LOADING SCREEN SEQUENCE
+        const loadingScreen = document.getElementById("observer-loading-screen");
+        const loadingText = document.getElementById("loading-text");
+        if (loadingScreen && loadingText) {
+          loadingScreen.style.display = "flex";
+          loadingText.textContent = "Finding your thoughts...";
+          setTimeout(() => {
+            loadingText.textContent = "Opening your quiet corner...";
+            setTimeout(() => {
+              loadingScreen.style.display = "none";
+              this.revealDesk(overlay, editor);
+            }, 700);
+          }, 800);
+        } else {
+          this.revealDesk(overlay, editor);
+        }
+      },
+
+      revealDesk(overlay, editor) {
+        const now = Date.now();
+        this.memory.lastVisit = now;
+        this.memory.totalSessions++;
+        this.saveMemory();
+
+        this.updateStreak();
+
+        if (editor) {
+          editor.classList.remove("fade-in");
+          editor.placeholder = "";
+        }
+
+        setTimeout(() => {
+          if (overlay) overlay.classList.add("visible");
+        }, 50);
+
+        setTimeout(() => {
+          if (editor) {
+            editor.classList.add("fade-in");
+            this.setPlaceholderAnimated(editor, this.pickFreshPlaceholder());
+          }
+        }, 700);
+
+        setTimeout(() => {
+          if (editor) editor.focus();
+        }, 1200);
+
+        if (editor) this.bindEvents(editor);
+      },
+
+      close() {
+        const overlay = document.getElementById("writer-desk-overlay");
+        if (overlay) overlay.classList.remove("visible");
+
+        const tooltip = document.getElementById("cursor-whisper-tooltip");
+        if (tooltip) tooltip.classList.remove("visible");
+
+        clearTimeout(this.idleTimer);
+      }
+    };
+
+    function closeFirstOpeningModal() {
+      Companion.memory.hasOpenedFirstTime = true;
+      Companion.saveMemory();
+      document.getElementById("observer-modal-overlay").style.display = "none";
+      Companion.open();
+    }
+  </script>
+
+  <!-- MAIN SCRIPT -->
   <script>
     // FIREBASE CONFIGURATION
     const firebaseConfig = {
@@ -964,14 +1337,11 @@
       measurementId: "G-DVEFM59RWW"
     };
 
-    // Initialize Firebase & Firestore
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // SECRET ENCRYPTION KEY
     const DB_ENCRYPTION_KEY = "polaris-sanctuary-secret-key";
 
-    // ENCRYPTION HELPERS
     function encryptText(plainText) {
       if (!plainText) return "";
       return CryptoJS.AES.encrypt(plainText, DB_ENCRYPTION_KEY).toString();
@@ -982,16 +1352,15 @@
       try {
         const bytes = CryptoJS.AES.decrypt(cipherText, DB_ENCRYPTION_KEY);
         const originalText = bytes.toString(CryptoJS.enc.Utf8);
-        return originalText || cipherText; // Fallback to raw text if already unencrypted
+        return originalText || cipherText;
       } catch (e) {
-        return cipherText; // Safety fallback for older articles
+        return cipherText;
       }
     }
 
     let publishedEntries = [];
     let editingArticleId = null;
 
-    // HELPER: CONVERT TITLE TO URL SLUG
     function createSlug(title, id) {
       if (!title || !title.trim()) return id;
       const cleanTitle = title
@@ -1002,7 +1371,6 @@
       return cleanTitle || id;
     }
 
-    // HELPER: COPY SHARE LINK WITH TITLE SLUG
     window.copyArticleLink = function(title, id, btnElement) {
       const slug = createSlug(title, id);
       const shareUrl = `${window.location.origin}${window.location.pathname}#${slug}`;
@@ -1023,7 +1391,6 @@
 
     document.addEventListener("DOMContentLoaded", () => {
 
-      // DOM Elements
       const deskOverlay = document.getElementById('writer-desk-overlay');
       const postTitle = document.getElementById('post-title');
       const postBody = document.getElementById('post-body');
@@ -1031,7 +1398,6 @@
       const draftsContainer = document.getElementById('desk-drafts-container');
       const mobileFooter = document.getElementById('mobile-secret-footer');
 
-      // 1. SCROLL ANIMATION OBSERVER
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -1042,7 +1408,6 @@
 
       document.querySelectorAll('.scroll-fade').forEach(el => observer.observe(el));
 
-      // 2. REALTIME DATABASE LISTENER WITH DECRYPTION
       db.collection("articles").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         publishedEntries = snapshot.docs.map(doc => {
           const data = doc.data();
@@ -1060,7 +1425,6 @@
         console.error("Firestore snapshot error:", error);
       });
 
-      // 3. RENDER ARTICLES TO FEED
       function renderFeed() {
         const feed = document.getElementById('feed-container');
         if (!feed) return;
@@ -1090,7 +1454,6 @@
         renderDeskPublishedList();
       }
 
-      // 4. CHECK URL HASH FOR DIRECT LINKING
       function checkAndScrollToHash() {
         if (window.location.hash) {
           const hash = window.location.hash.substring(1);
@@ -1103,7 +1466,6 @@
         }
       }
 
-      // 5. RENDER PUBLISHED LIST INSIDE DESK
       function renderDeskPublishedList() {
         const container = document.getElementById('desk-published-container');
         if (!container) return;
@@ -1154,15 +1516,16 @@
         }
       }
 
-      // 6. OVERLAY DESK TOGGLES
       window.openDesk = function () {
         if (deskOverlay) deskOverlay.style.display = 'block';
+        Companion.open();
         renderDrafts();
         loadActiveDraft();
         renderDeskPublishedList();
       }
 
       window.closeDesk = function () {
+        Companion.close();
         if (deskOverlay) deskOverlay.style.display = 'none';
       }
 
@@ -1171,7 +1534,9 @@
         window.openDesk();
       }
 
+      // KEYBOARD SHORTCUTS
       document.addEventListener('keydown', (e) => {
+        // Ctrl + E -> Toggle Editor
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
           e.preventDefault();
           if (deskOverlay && deskOverlay.style.display === 'block') {
@@ -1179,6 +1544,12 @@
           } else {
             window.openDesk();
           }
+        }
+
+        // SECRET KEYBOARD EASTER EGG (Ctrl + Shift + P -> Observer's Secret Letter)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'p') {
+          e.preventDefault();
+          alert("Dear Dhruv,\n\nI built this place because I wanted to preserve the parts of you that sometimes go unnoticed.\n\nNot only your achievements.\nNot only your goals.\n\nBut your questions. Your silence. Your small thoughts.\n\nThe world will celebrate what you create. I hope you always remember that someone admires who you are while creating it.\n\n— P");
         }
       });
 
@@ -1197,9 +1568,8 @@
         });
       }
 
-      // 7. DRAFTS MANAGEMENT
       let drafts = JSON.parse(localStorage.getItem('dhruv_moleskine_drafts')) || [
-        { id: '1', title: 'Untitled Reflection', body: '' }
+        { id: '1', title: '', body: '' }
       ];
       let activeDraftId = drafts[0].id;
 
@@ -1219,6 +1589,10 @@
         const active = drafts.find(d => d.id === activeDraftId) || drafts[0];
         if (postTitle) postTitle.value = active.title;
         if (postBody) postBody.value = active.body;
+
+        if (!active.body.trim() && postBody) {
+          Companion.setPlaceholderAnimated(postBody, Companion.pickFreshPlaceholder());
+        }
       }
 
       function saveDraft() {
@@ -1228,7 +1602,15 @@
           if (postBody) active.body = postBody.value;
           localStorage.setItem('dhruv_moleskine_drafts', JSON.stringify(drafts));
         }
-        if (deskStatus) deskStatus.textContent = 'Auto-Saved';
+
+        const hour = new Date().getHours();
+        if (deskStatus) {
+          if (hour >= 22 || hour < 4) {
+            deskStatus.textContent = 'Saved. Now promise you\'ll sleep.';
+          } else {
+            deskStatus.textContent = 'Auto-Saved';
+          }
+        }
         renderDrafts();
       }
 
@@ -1236,6 +1618,12 @@
         saveDraft();
         editingArticleId = null;
         const newId = Date.now().toString();
+
+        const prevBody = postBody ? postBody.value.trim() : "";
+        if (prevBody.length > 0 && prevBody.length < 80) {
+          Companion.whisper("Some days don't need many words.", 3500);
+        }
+
         drafts.unshift({ id: newId, title: '', body: '' });
         activeDraftId = newId;
         loadActiveDraft();
@@ -1266,7 +1654,7 @@
       if (postTitle) postTitle.addEventListener('input', saveDraft);
       if (postBody) postBody.addEventListener('input', saveDraft);
 
-      // 8. PUBLISH ENCRYPTED DATA TO FIREBASE
+      // PUBLISH ENCRYPTED DATA TO FIREBASE WITH QUIET RITUAL ANIMATION
       window.publishThought = function () {
         if (!postBody || !postBody.value.trim()) return;
 
@@ -1274,9 +1662,10 @@
         const rawBody = postBody.value;
         const date = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
 
-        // ENCRYPT BEFORE SAVING TO DATABASE
         const encryptedTitle = encryptText(rawTitle);
         const encryptedBody = encryptText(rawBody);
+
+        let targetDocId = editingArticleId;
 
         if (editingArticleId) {
           db.collection("articles").doc(editingArticleId).update({
@@ -1286,7 +1675,9 @@
           });
           editingArticleId = null;
         } else {
-          db.collection("articles").add({
+          const newDocRef = db.collection("articles").doc();
+          targetDocId = newDocRef.id;
+          newDocRef.set({
             title: encryptedTitle,
             body: encryptedBody,
             date,
@@ -1294,6 +1685,7 @@
           });
         }
 
+        // Clean up draft storage
         drafts = drafts.filter(d => d.id !== activeDraftId);
         if (drafts.length === 0) {
           drafts = [{ id: Date.now().toString(), title: '', body: '' }];
@@ -1301,11 +1693,37 @@
         activeDraftId = drafts[0].id;
         localStorage.setItem('dhruv_moleskine_drafts', JSON.stringify(drafts));
 
-        loadActiveDraft();
-        window.closeDesk();
+        // 1. GENTLE PAGE & DESK FADE
+        const desk = document.getElementById('writer-desk');
+        if (desk) desk.classList.add('closing');
 
-        const journalElem = document.getElementById('journal');
-        if (journalElem) journalElem.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+          window.closeDesk();
+
+          // 2. SHOW QUIET TOAST LINE FOR 2 SECONDS
+          const toast = document.getElementById('publish-toast');
+          if (toast) {
+            toast.classList.add('show');
+            setTimeout(() => {
+              toast.classList.remove('show');
+            }, 2000);
+          }
+
+          // 3. SMOOTH SCROLL TO PUBLISHED PIECE
+          setTimeout(() => {
+            let targetEl = null;
+            if (targetDocId) {
+              targetEl = document.querySelector(`[data-id="${targetDocId}"]`);
+            }
+            if (!targetEl) {
+              targetEl = document.getElementById('journal');
+            }
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 300);
+
+        }, 500);
       }
     });
   </script>
