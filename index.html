@@ -912,6 +912,9 @@
     <br><span style="letter-spacing: 0.1em; opacity: 0.8;">— DHRUV</span>
   </footer>
 
+  <!-- CRYPTO-JS LIBRARY FOR ENCRYPTION -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
   <!-- FIREBASE COMPAT SDK SCRIPTS -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -932,12 +935,44 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // SECRET ENCRYPTION KEY
+    const DB_ENCRYPTION_KEY = "polaris-sanctuary-secret-key";
+
+    // ENCRYPTION HELPERS
+    function encryptText(plainText) {
+      if (!plainText) return "";
+      return CryptoJS.AES.encrypt(plainText, DB_ENCRYPTION_KEY).toString();
+    }
+
+    function decryptText(cipherText) {
+      if (!cipherText) return "";
+      try {
+        const bytes = CryptoJS.AES.decrypt(cipherText, DB_ENCRYPTION_KEY);
+        const originalText = bytes.toString(CryptoJS.enc.Utf8);
+        return originalText || cipherText; // Fallback to raw text if already unencrypted
+      } catch (e) {
+        return cipherText; // Safety fallback for older articles
+      }
+    }
+
     let publishedEntries = [];
     let editingArticleId = null;
 
-    // HELPER: COPY SHARE LINK
-    window.copyArticleLink = function(id, btnElement) {
-      const shareUrl = `${window.location.origin}${window.location.pathname}#article-${id}`;
+    // HELPER: CONVERT TITLE TO URL SLUG
+    function createSlug(title, id) {
+      if (!title || !title.trim()) return id;
+      const cleanTitle = title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+      return cleanTitle || id;
+    }
+
+    // HELPER: COPY SHARE LINK WITH TITLE SLUG
+    window.copyArticleLink = function(title, id, btnElement) {
+      const slug = createSlug(title, id);
+      const shareUrl = `${window.location.origin}${window.location.pathname}#${slug}`;
       navigator.clipboard.writeText(shareUrl).then(() => {
         if (btnElement) {
           const originalText = btnElement.textContent;
@@ -974,12 +1009,18 @@
 
       document.querySelectorAll('.scroll-fade').forEach(el => observer.observe(el));
 
-      // 2. REALTIME DATABASE LISTENER
+      // 2. REALTIME DATABASE LISTENER WITH DECRYPTION
       db.collection("articles").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-        publishedEntries = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        publishedEntries = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            date: data.date,
+            timestamp: data.timestamp,
+            title: decryptText(data.title),
+            body: decryptText(data.body)
+          };
+        });
         renderFeed();
         checkAndScrollToHash();
       }, (error) => {
@@ -996,14 +1037,16 @@
         publishedEntries.forEach((entry) => {
           const article = document.createElement('article');
           article.className = 'entry scroll-fade visible';
-          article.id = `article-${entry.id}`;
+          const slug = createSlug(entry.title, entry.id);
+          article.id = slug;
+          article.setAttribute('data-id', entry.id);
 
           const formattedBody = entry.body ? entry.body.replace(/\n/g, '</p><p>') : '';
 
           article.innerHTML = `
             <div class="entry-header">
               <h1 class="entry-title">${entry.title || 'Untitled'}</h1>
-              <button class="entry-share-btn" onclick="copyArticleLink('${entry.id}', this)">🔗 Share</button>
+              <button class="entry-share-btn" onclick="copyArticleLink('${(entry.title || '').replace(/'/g, "\\'")}', '${entry.id}', this)">🔗 Share</button>
             </div>
             <div class="entry-meta">${entry.date || ''} • Journal</div>
             <div class="entry-content"><p>${formattedBody}</p></div>
@@ -1017,7 +1060,8 @@
       // 4. CHECK URL HASH FOR DIRECT LINKING
       function checkAndScrollToHash() {
         if (window.location.hash) {
-          const targetEl = document.querySelector(window.location.hash);
+          const hash = window.location.hash.substring(1);
+          let targetEl = document.getElementById(hash) || document.querySelector(`[data-id="${hash}"]`);
           if (targetEl) {
             setTimeout(() => {
               targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1052,7 +1096,7 @@
             </div>
           `;
 
-          item.querySelector('.desk-btn-share').addEventListener('click', (e) => copyArticleLink(entry.id, e.target));
+          item.querySelector('.desk-btn-share').addEventListener('click', (e) => copyArticleLink(entry.title || '', entry.id, e.target));
           item.querySelector('.desk-btn-edit').addEventListener('click', () => editPublishedEntry(entry.id));
           item.querySelector('.desk-btn-delete').addEventListener('click', () => deletePublishedEntry(entry.id));
 
@@ -1189,25 +1233,29 @@
       if (postTitle) postTitle.addEventListener('input', saveDraft);
       if (postBody) postBody.addEventListener('input', saveDraft);
 
-      // 8. PUBLISH TO FIREBASE
+      // 8. PUBLISH ENCRYPTED DATA TO FIREBASE
       window.publishThought = function () {
         if (!postBody || !postBody.value.trim()) return;
 
-        const title = (postTitle && postTitle.value) ? postTitle.value : 'Untitled Thought';
-        const body = postBody.value;
+        const rawTitle = (postTitle && postTitle.value) ? postTitle.value : 'Untitled Thought';
+        const rawBody = postBody.value;
         const date = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        // ENCRYPT BEFORE SAVING TO DATABASE
+        const encryptedTitle = encryptText(rawTitle);
+        const encryptedBody = encryptText(rawBody);
 
         if (editingArticleId) {
           db.collection("articles").doc(editingArticleId).update({
-            title,
-            body,
+            title: encryptedTitle,
+            body: encryptedBody,
             date
           });
           editingArticleId = null;
         } else {
           db.collection("articles").add({
-            title,
-            body,
+            title: encryptedTitle,
+            body: encryptedBody,
             date,
             timestamp: Date.now()
           });
