@@ -338,13 +338,12 @@
       color: var(--muted-text);
     }
 
-    .desk-first-ps {
+    .desk-permanent-ps {
       font-family: var(--font-quote);
       font-style: italic;
       font-size: 0.95rem;
       color: var(--accent-gold);
       margin-top: 0.2rem;
-      display: none;
     }
 
     /* PUBLISH TOAST NOTIFICATION */
@@ -665,10 +664,10 @@
   <div id="writer-desk-overlay">
     <div id="writer-desk">
       
-      <!-- DATE AREA WITH CLEAN SIGNATURE -->
+      <!-- PERMANENT HEADER LINES -->
       <div class="desk-date-container">
-        <div class="desk-date" id="desk-current-date">July 27, 2026 • Private Notebook</div>
-        <div class="desk-first-ps" id="desk-first-ps">"P.S. — I hope you know someone is always cheering for the person behind these pages."</div>
+        <div class="desk-date" id="desk-current-date">July 27, 2026 • A page waiting for Dhruv</div>
+        <div class="desk-permanent-ps">"P.S. — I hope you know someone is always cheering for the person behind these pages."</div>
       </div>
       
       <!-- INLINE CURSOR POPUP TOOLTIP -->
@@ -955,11 +954,9 @@
         totalSessions: 0,
         streakDays: 0,
         lastStreakDate: null,
-        lastPlaceholderIdx: -1,
-        hasOpenedFirstTime: false
+        lastPlaceholderIdx: -1
       },
 
-      // DAYTIME PLACEHOLDERS (5:00 AM - 9:59 PM)
       dayPlaceholders: [
         "Another blank page. I wonder what thoughts found their way here today.",
         "Before you write anything... I hope you remember that your thoughts are worth keeping.",
@@ -990,7 +987,6 @@
         "I hope you see yourself the way someone who believes in you sees you."
       ],
 
-      // NIGHTTIME PLACEHOLDERS (10:00 PM - 4:59 AM) 🌙
       nightPlaceholders: [
         "Everyone is asleep. But some thoughts choose the quiet hours.",
         "Late night pages have a different honesty. Maybe today’s thoughts belong here.",
@@ -1089,28 +1085,6 @@
         }, duration);
       },
 
-      getDynamicDateString() {
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        const psElem = document.getElementById("desk-first-ps");
-
-        if (!this.memory.hasOpenedFirstTime) {
-          if (psElem) psElem.style.display = "block";
-          return `${dateStr} • A page waiting for Dhruv`;
-        }
-
-        if (psElem) psElem.style.display = "none";
-
-        const options = [
-          "Private Notebook",
-          "A page saved for your thoughts",
-          "Another chapter begins",
-          "Still curious. Still building."
-        ];
-        const pick = options[Math.floor(Math.random() * options.length)];
-        return `${dateStr} • ${pick}`;
-      },
-
       updateStreak() {
         const todayStr = new Date().toDateString();
         if (this.memory.lastStreakDate !== todayStr) {
@@ -1147,7 +1121,6 @@
           const tooltip = document.getElementById("cursor-whisper-tooltip");
           if (tooltip) tooltip.classList.remove("visible");
 
-          // EASTER EGGS
           const lower = text.toLowerCase();
           if (lower.endsWith("i'm tired") || lower.endsWith("im tired")) {
             this.whisper("I know.", 3500);
@@ -1157,7 +1130,6 @@
             this.whisper("Some people leave gently. Some stay quietly.", 4500);
           }
 
-          // WORD COUNT MILESTONES
           if (words >= 500 && !this.hasTriggered500) {
             this.hasTriggered500 = true;
             this.whisper("Looks like today had a lot to say.", 4000);
@@ -1166,19 +1138,17 @@
             this.whisper("That must feel lighter.", 4000);
           }
 
-          // IDLE CURSOR TIMERS
           clearTimeout(this.idleTimer);
           this.idleTimer = setTimeout(() => {
             this.whisper("Still thinking?");
             this.idleTimer = setTimeout(() => {
               this.whisper("No rush. I'm still here.");
               this.idleTimer = setTimeout(() => {
-                this.whisper("Sometimes staring at the page counts too.");
-              }, 90000);
+                this.whisper("Sometimes staring at the page counts too.", 90000);
+              });
             }, 45000);
           }, 45000);
 
-          // DELETION WHISPERS
           if (this.lastLength - currentLength > 20) {
             const idx = Math.min(this.deleteSequenceCount, this.deletionWhispers.length - 1);
             this.whisper(this.deletionWhispers[idx]);
@@ -1189,7 +1159,7 @@
         });
       },
 
-      open() {
+      open(isNewPage = false) {
         this.sessionStart = Date.now();
         this.deleteSequenceCount = 0;
         this.hasTriggered500 = false;
@@ -1201,9 +1171,18 @@
         const desk = document.getElementById("writer-desk");
 
         if (desk) desk.classList.remove("closing");
-        if (dateElem) dateElem.textContent = this.getDynamicDateString();
 
-        // LOADING SCREEN SEQUENCE
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        if (dateElem) {
+          if (isNewPage) {
+            dateElem.textContent = `${dateStr} • A page waiting for Dhruv`;
+          } else {
+            dateElem.textContent = `${dateStr} • Still curious. Still building.`;
+          }
+        }
+
         const loadingScreen = document.getElementById("observer-loading-screen");
         const loadingText = document.getElementById("loading-text");
         if (loadingScreen && loadingText) {
@@ -1447,6 +1426,12 @@
         if (postTitle) postTitle.value = entry.title || '';
         if (postBody) postBody.value = entry.body || '';
 
+        // Update header for draft/existing entry
+        const dateElem = document.getElementById("desk-current-date");
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        if (dateElem) dateElem.textContent = `${dateStr} • Still curious. Still building.`;
+
         if (deskOverlay) deskOverlay.scrollTop = 0;
       }
 
@@ -1458,7 +1443,12 @@
 
       window.openDesk = function () {
         if (deskOverlay) deskOverlay.style.display = 'block';
-        Companion.open();
+        
+        // Check if current active draft is empty (new page)
+        const active = drafts.find(d => d.id === activeDraftId);
+        const isNew = active && !active.title.trim() && !active.body.trim();
+
+        Companion.open(isNew);
         renderDrafts();
         loadActiveDraft();
         renderDeskPublishedList();
@@ -1476,7 +1466,6 @@
 
       // KEYBOARD SHORTCUTS
       document.addEventListener('keydown', (e) => {
-        // Ctrl + E -> Toggle Editor
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
           e.preventDefault();
           if (deskOverlay && deskOverlay.style.display === 'block') {
@@ -1486,7 +1475,6 @@
           }
         }
 
-        // SECRET KEYBOARD EASTER EGG (Ctrl + Shift + P -> Observer's Secret Letter)
         if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'p') {
           e.preventDefault();
           alert("Dear Dhruv,\n\nI built this place because I wanted to preserve the parts of you that sometimes go unnoticed.\n\nNot only your achievements.\nNot only your goals.\n\nBut your questions. Your silence. Your small thoughts.\n\nThe world will celebrate what you create. I hope you always remember that someone admires who you are while creating it.\n\n— P");
@@ -1530,6 +1518,18 @@
         if (postTitle) postTitle.value = active.title;
         if (postBody) postBody.value = active.body;
 
+        const dateElem = document.getElementById("desk-current-date");
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        if (dateElem) {
+          if (!active.title.trim() && !active.body.trim()) {
+            dateElem.textContent = `${dateStr} • A page waiting for Dhruv`;
+          } else {
+            dateElem.textContent = `${dateStr} • Still curious. Still building.`;
+          }
+        }
+
         if (!active.body.trim() && postBody) {
           Companion.setPlaceholderAnimated(postBody, Companion.pickFreshPlaceholder());
         }
@@ -1566,6 +1566,13 @@
 
         drafts.unshift({ id: newId, title: '', body: '' });
         activeDraftId = newId;
+
+        // Instantly update header to new page style
+        const dateElem = document.getElementById("desk-current-date");
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        if (dateElem) dateElem.textContent = `${dateStr} • A page waiting for Dhruv`;
+
         loadActiveDraft();
         renderDrafts();
       }
@@ -1594,7 +1601,6 @@
       if (postTitle) postTitle.addEventListener('input', saveDraft);
       if (postBody) postBody.addEventListener('input', saveDraft);
 
-      // PUBLISH ENCRYPTED DATA TO FIREBASE WITH QUIET RITUAL ANIMATION
       window.publishThought = function () {
         if (!postBody || !postBody.value.trim()) return;
 
@@ -1625,7 +1631,6 @@
           });
         }
 
-        // Clean up draft storage
         drafts = drafts.filter(d => d.id !== activeDraftId);
         if (drafts.length === 0) {
           drafts = [{ id: Date.now().toString(), title: '', body: '' }];
@@ -1633,14 +1638,12 @@
         activeDraftId = drafts[0].id;
         localStorage.setItem('dhruv_moleskine_drafts', JSON.stringify(drafts));
 
-        // 1. GENTLE PAGE & DESK FADE
         const desk = document.getElementById('writer-desk');
         if (desk) desk.classList.add('closing');
 
         setTimeout(() => {
           window.closeDesk();
 
-          // 2. SHOW QUIET TOAST LINE FOR 2 SECONDS
           const toast = document.getElementById('publish-toast');
           if (toast) {
             toast.classList.add('show');
@@ -1649,7 +1652,6 @@
             }, 2000);
           }
 
-          // 3. SMOOTH SCROLL TO PUBLISHED PIECE
           setTimeout(() => {
             let targetEl = null;
             if (targetDocId) {
