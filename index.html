@@ -216,7 +216,7 @@
     }
 
     .entry {
-      margin-bottom: 3rem;
+      margin-bottom: 3.5rem;
       padding: 2.5rem;
       background: rgba(255, 255, 255, 0.75);
       border: 1px solid var(--border-color);
@@ -289,6 +289,88 @@
       margin-bottom: 0;
     }
 
+    /* --- ARTICLE COMMENT SECTION STYLING --- */
+    .article-comments-section {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .comments-heading {
+      font-family: var(--font-title);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--muted-text);
+    }
+
+    .comments-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .comment-item {
+      background: rgba(245, 241, 232, 0.6);
+      border: 1px solid rgba(13, 27, 42, 0.08);
+      padding: 0.8rem 1rem;
+      border-radius: 4px;
+      font-size: 0.92rem;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--muted-text);
+      margin-bottom: 0.2rem;
+    }
+
+    .comment-text {
+      color: var(--text-color);
+      font-weight: 300;
+    }
+
+    .comment-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .comment-input-name,
+    .comment-input-text {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 0.9rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      border-radius: 4px;
+      outline: none;
+      color: var(--text-color);
+    }
+
+    .comment-input-text {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .comment-submit-btn {
+      align-self: flex-start;
+      background: var(--muted-text);
+      color: #FFF9EF;
+      border: none;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: opacity 0.2s ease;
+    }
+
+    .comment-submit-btn:hover {
+      opacity: 0.85;
+    }
+
     /* PRIVATE MOLESKINE WRITING DESK (MODAL) */
     #writer-desk-overlay {
       display: none;
@@ -322,7 +404,6 @@
       transition: transform 0.6s ease, opacity 0.6s ease;
     }
 
-    /* GENTLE CLOSING ANIMATION CLASS */
     #writer-desk.closing {
       opacity: 0;
       transform: scale(0.97) translateY(10px);
@@ -411,7 +492,6 @@
       transform: translateY(-100%) translateY(-8px);
     }
 
-    /* TEXT MIRROR FOR CURSOR POSITION TRACKING */
     #text-mirror-box {
       position: absolute;
       visibility: hidden;
@@ -495,7 +575,6 @@
       color: var(--bg-color);
     }
 
-    /* DESK PUBLISHED LIST SECTION */
     .desk-published-section {
       margin-top: 2rem;
       padding-top: 1.5rem;
@@ -586,7 +665,6 @@
       color: #fff;
     }
 
-    /* LOADING SCREEN OVERLAY */
     #observer-loading-screen {
       display: none;
       position: fixed;
@@ -599,7 +677,6 @@
       padding: 2rem;
     }
 
-    /* FOOTER */
     footer {
       text-align: center;
       padding: 5rem 0 3rem;
@@ -1167,21 +1244,9 @@
 
         const overlay = document.getElementById("writer-desk-overlay");
         const editor = document.getElementById("post-body");
-        const dateElem = document.getElementById("desk-current-date");
         const desk = document.getElementById("writer-desk");
 
         if (desk) desk.classList.remove("closing");
-
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-        if (dateElem) {
-          if (isNewPage) {
-            dateElem.textContent = `${dateStr} • A page waiting for Dhruv`;
-          } else {
-            dateElem.textContent = `${dateStr} • Still curious. Still building.`;
-          }
-        }
 
         const loadingScreen = document.getElementById("observer-loading-screen");
         const loadingText = document.getElementById("loading-text");
@@ -1308,6 +1373,32 @@
       });
     };
 
+    // SUBMIT COMMENT HANDLER
+    window.submitComment = function(articleId, event) {
+      event.preventDefault();
+      const form = event.target;
+      const nameInput = form.querySelector('.comment-input-name');
+      const textInput = form.querySelector('.comment-input-text');
+
+      const author = nameInput.value.trim() || 'Anonymous';
+      const text = textInput.value.trim();
+
+      if (!text) return;
+
+      const encryptedComment = {
+        author: encryptText(author),
+        text: encryptText(text),
+        timestamp: Date.now()
+      };
+
+      db.collection("articles").doc(articleId).collection("comments").add(encryptedComment).then(() => {
+        nameInput.value = '';
+        textInput.value = '';
+      }).catch(err => {
+        console.error("Error adding comment: ", err);
+      });
+    };
+
     document.addEventListener("DOMContentLoaded", () => {
 
       const deskOverlay = document.getElementById('writer-desk-overlay');
@@ -1328,18 +1419,41 @@
       document.querySelectorAll('.scroll-fade').forEach(el => observer.observe(el));
 
       db.collection("articles").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
-        publishedEntries = snapshot.docs.map(doc => {
-          const data = doc.data();
+        const loadPromises = snapshot.docs.map(async docSnap => {
+          const data = docSnap.data();
+          const articleId = docSnap.id;
+          
+          // Fetch comments for this article in real-time
+          let comments = [];
+          try {
+            const commentsSnap = await db.collection("articles").doc(articleId).collection("comments").orderBy("timestamp", "asc").get();
+            comments = commentsSnap.docs.map(cDoc => {
+              const cData = cDoc.data();
+              return {
+                id: cDoc.id,
+                author: decryptText(cData.author),
+                text: decryptText(cData.text)
+              };
+            });
+          } catch(e) {
+            console.error("Error loading comments", e);
+          }
+
           return {
-            id: doc.id,
+            id: articleId,
             date: data.date,
             timestamp: data.timestamp,
             title: decryptText(data.title),
-            body: decryptText(data.body)
+            body: decryptText(data.body),
+            comments: comments
           };
         });
-        renderFeed();
-        checkAndScrollToHash();
+
+        Promise.all(loadPromises).then(entries => {
+          publishedEntries = entries;
+          renderFeed();
+          checkAndScrollToHash();
+        });
       }, (error) => {
         console.error("Firestore snapshot error:", error);
       });
@@ -1359,6 +1473,17 @@
 
           const formattedBody = entry.body ? entry.body.replace(/\n/g, '</p><p>') : '';
 
+          // Render comments HTML
+          let commentsHtml = '';
+          entry.comments.forEach(c => {
+            commentsHtml += `
+              <div class="comment-item">
+                <div class="comment-author">${escapeHtml(c.author)}</div>
+                <div class="comment-text">${escapeHtml(c.text)}</div>
+              </div>
+            `;
+          });
+
           article.innerHTML = `
             <div class="entry-header">
               <h1 class="entry-title">${entry.title || 'Untitled'}</h1>
@@ -1366,11 +1491,28 @@
             </div>
             <div class="entry-meta">${entry.date || ''} • Journal</div>
             <div class="entry-content"><p>${formattedBody}</p></div>
+
+            <!-- ARTICLE COMMENTS SECTION -->
+            <div class="article-comments-section">
+              <div class="comments-heading">Thoughts & Views</div>
+              <div class="comments-list">
+                ${commentsHtml || '<p style="font-size: 0.85rem; color: var(--muted-text); font-style: italic;">No thoughts left here yet. Be the first.</p>'}
+              </div>
+              <form class="comment-form" onsubmit="submitComment('${entry.id}', event)">
+                <input type="text" class="comment-input-name" placeholder="Your name..." required />
+                <textarea class="comment-input-text" placeholder="Leave a thought..." required></textarea>
+                <button type="submit" class="comment-submit-btn">Leave a thought</button>
+              </form>
+            </div>
           `;
           feed.appendChild(article);
         });
 
         renderDeskPublishedList();
+      }
+
+      function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
       }
 
       function checkAndScrollToHash() {
@@ -1426,12 +1568,6 @@
         if (postTitle) postTitle.value = entry.title || '';
         if (postBody) postBody.value = entry.body || '';
 
-        // Update header for draft/existing entry
-        const dateElem = document.getElementById("desk-current-date");
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        if (dateElem) dateElem.textContent = `${dateStr} • Still curious. Still building.`;
-
         if (deskOverlay) deskOverlay.scrollTop = 0;
       }
 
@@ -1444,7 +1580,6 @@
       window.openDesk = function () {
         if (deskOverlay) deskOverlay.style.display = 'block';
         
-        // Check if current active draft is empty (new page)
         const active = drafts.find(d => d.id === activeDraftId);
         const isNew = active && !active.title.trim() && !active.body.trim();
 
@@ -1464,7 +1599,6 @@
         window.openDesk();
       }
 
-      // KEYBOARD SHORTCUTS
       document.addEventListener('keydown', (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'e') {
           e.preventDefault();
@@ -1518,18 +1652,6 @@
         if (postTitle) postTitle.value = active.title;
         if (postBody) postBody.value = active.body;
 
-        const dateElem = document.getElementById("desk-current-date");
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-
-        if (dateElem) {
-          if (!active.title.trim() && !active.body.trim()) {
-            dateElem.textContent = `${dateStr} • A page waiting for Dhruv`;
-          } else {
-            dateElem.textContent = `${dateStr} • Still curious. Still building.`;
-          }
-        }
-
         if (!active.body.trim() && postBody) {
           Companion.setPlaceholderAnimated(postBody, Companion.pickFreshPlaceholder());
         }
@@ -1566,13 +1688,6 @@
 
         drafts.unshift({ id: newId, title: '', body: '' });
         activeDraftId = newId;
-
-        // Instantly update header to new page style
-        const dateElem = document.getElementById("desk-current-date");
-        const now = new Date();
-        const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-        if (dateElem) dateElem.textContent = `${dateStr} • A page waiting for Dhruv`;
-
         loadActiveDraft();
         renderDrafts();
       }
