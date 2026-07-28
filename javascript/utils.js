@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
+=======
 function createSlug(title, id) {
   if (!title || !title.trim()) return id;
   const cleanTitle = title
@@ -29,3 +34,4 @@ window.copyArticleLink = function(title, id, btnElement) {
     console.error('Could not copy text: ', err);
   });
 };
+>>>>>>> fdd33070c53ed3e95d9949dca616633974a8b562

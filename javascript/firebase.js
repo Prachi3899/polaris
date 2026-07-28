@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+firebase.initializeApp(firebaseConfig);
+
+=======
 const firebaseConfig = {
   apiKey: "AIzaSyDWFPR9j91m3dtUT6w_Fg4Q3O09Lwk7MUw",
   authDomain: "polaris-3bd35.firebaseapp.com",
@@ -9,4 +13,5 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+>>>>>>> fdd33070c53ed3e95d9949dca616633974a8b562
 const db = firebase.firestore();
