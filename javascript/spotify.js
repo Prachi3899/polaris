@@ -181,19 +181,25 @@ async function fetchSpotifyMetadata(url) {
   return null;
 }
 
-async function loadSongData() {
-  let songData = JSON.parse(localStorage.getItem('polaris_room_soundtrack'));
-  
-  if (!songData) {
-    songData = {
-      title: "Saturn",
-      artist: "Sleeping At Last",
-      link: "https://open.spotify.com/track/6rqhFgbbKwnb9MLmUQDhG6"
-    };
-  }
+// Listen to Firestore in real-time so it changes globally on every device
+function loadSongData() {
+  db.collection("settings").doc("room_soundtrack").onSnapshot((doc) => {
+    let songData;
+    if (doc.exists) {
+      songData = doc.data();
+    } else {
+      songData = {
+        title: "Saturn",
+        artist: "Sleeping At Last",
+        link: "https://open.spotify.com/track/6rqhFgbbKwnb9MLmUQDhG6"
+      };
+    }
 
-  updatePublicRoomSoundDisplay(songData);
-  updateDeskRoomSoundUI(songData);
+    updatePublicRoomSoundDisplay(songData);
+    updateDeskRoomSoundUI(songData);
+  }, (error) => {
+    console.error("Error loading room sound from Firestore:", error);
+  });
 }
 
 window.saveSongSetting = async function() {
@@ -213,18 +219,22 @@ window.saveSongSetting = async function() {
     link: rawLink
   };
 
-  setTimeout(() => {
-    localStorage.setItem('polaris_room_soundtrack', JSON.stringify(songData));
-    updatePublicRoomSoundDisplay(songData);
-    updateDeskRoomSoundUI(songData);
+  try {
+    // Save globally to Firebase Firestore
+    await db.collection("settings").doc("room_soundtrack").set(songData);
 
-    if (statusEl) {
-      statusEl.textContent = "The room sounds a little different now. ✓ Saved.";
-      setTimeout(() => {
-        statusEl.textContent = "";
-      }, 3000);
-    }
-  }, 600);
+    setTimeout(() => {
+      if (statusEl) {
+        statusEl.textContent = "The room sounds a little different now. ✓ Saved globally.";
+        setTimeout(() => {
+          statusEl.textContent = "";
+        }, 3000);
+      }
+    }, 600);
+  } catch (err) {
+    console.error("Error saving room soundtrack:", err);
+    if (statusEl) statusEl.textContent = "Error updating atmosphere.";
+  }
 };
 
 function updatePublicRoomSoundDisplay(songData) {
@@ -255,11 +265,13 @@ function updateDeskRoomSoundUI(songData) {
   const linkInput = document.getElementById('desk-room-sound-link');
   const previewState = document.getElementById('desk-room-sound-connected-state');
 
-  if (linkInput) linkInput.value = songData.link;
+  if (linkInput && document.activeElement !== linkInput) {
+    linkInput.value = songData.link;
+  }
 
   if (previewState) {
     previewState.innerHTML = `
-      <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent-gold); font-weight: 600; margin-bottom: 0.4rem;">✓ Connected</div>
+      <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent-gold); font-weight: 600; margin-bottom: 0.4rem;">✓ Connected Globally</div>
       <div style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 600;">♪ ${songData.title}</div>
       <div style="font-family: var(--font-quote); font-style: italic; color: var(--muted-text); margin-bottom: 0.8rem;">${songData.artist}</div>
     `;
