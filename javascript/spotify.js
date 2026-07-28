@@ -158,19 +158,30 @@ async function fetchSpotifyMetadata(url) {
     const response = await fetch(`https://open.spotify.com/oembed?url=${encodeURIComponent(url)}`);
     if (response.ok) {
       const data = await response.json();
-      const fullTitle = data.title || "Unknown Track";
-      
+      // data.title often contains "Song Name" or "Song Name by Artist on Spotify"
+      let fullTitle = data.title || "";
       let title = fullTitle;
-      let artist = "Sanctuary Sound";
-      
+      let artist = "";
+
+      // Spotify oEmbed sometimes puts artist in author_name if available
+      if (data.author_name) {
+        artist = data.author_name;
+      }
+
+      // Clean up common Spotify oEmbed title formats
       if (fullTitle.includes(" · ")) {
         const parts = fullTitle.split(" · ");
         title = parts[0];
-        artist = parts[1];
+        if (!artist) artist = parts[1];
       } else if (fullTitle.includes(" by ")) {
         const parts = fullTitle.split(" by ");
         title = parts[0];
-        artist = parts[1];
+        if (!artist) artist = parts[1];
+      }
+
+      // Fallback if artist is still empty
+      if (!artist) {
+        artist = "Spotify";
       }
 
       return { title, artist, link: url };
@@ -182,7 +193,7 @@ async function fetchSpotifyMetadata(url) {
 }
 
 function loadSongData() {
-  // Show a quiet loading state immediately on load so it doesn't flash old data
+  // Show a quiet loading state immediately on load
   const titleEl = document.getElementById('public-room-sound-title');
   const artistEl = document.getElementById('public-room-sound-artist');
   if (titleEl) titleEl.textContent = "Listening...";
@@ -193,10 +204,11 @@ function loadSongData() {
     if (doc.exists) {
       songData = doc.data();
     } else {
+      // Non-hardcoded neutral fallback if Firebase document is empty/missing
       songData = {
-        title: "Saturn",
-        artist: "Sleeping At Last",
-        link: "https://open.spotify.com/track/6rqhFgbbKwnb9MLmUQDhG6"
+        title: "A Quiet Sanctuary",
+        artist: "Ambient Tones",
+        link: "https://open.spotify.com"
       };
     }
 
@@ -220,7 +232,7 @@ window.saveSongSetting = async function() {
   
   const songData = metadata || {
     title: "Connected Track",
-    artist: "Spotify",
+    artist: "",
     link: rawLink
   };
 
@@ -249,9 +261,10 @@ function updatePublicRoomSoundDisplay(songData) {
 
   if (whisperEl) whisperEl.textContent = getRoomSoundWhisper();
   if (titleEl) titleEl.textContent = songData.title;
-  if (artistEl) artistEl.textContent = songData.artist;
+  if (artistEl) artistEl.style.display = 'none';
   if (linkEl) {
     linkEl.href = songData.link;
+    linkEl.style.display = "inline-block";
     linkEl.onclick = function(e) {
       e.preventDefault();
       linkEl.textContent = "Opening the room's soundtrack...";
@@ -277,7 +290,6 @@ function updateDeskRoomSoundUI(songData) {
     previewState.innerHTML = `
       <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent-gold); font-weight: 600; margin-bottom: 0.4rem;">✓ Connected Globally</div>
       <div style="font-family: var(--font-title); font-size: 1.3rem; font-weight: 600;">♪ ${songData.title}</div>
-      <div style="font-family: var(--font-quote); font-style: italic; color: var(--muted-text); margin-bottom: 0.8rem;">${songData.artist}</div>
     `;
   }
 }
