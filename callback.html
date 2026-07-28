@@ -1,0 +1,34 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connecting Spotify...</title>
+</head>
+<body>
+
+<p>Connecting to Spotify...</p>
+
+<script>
+    // Get everything after the #
+    const hash = window.location.hash.substring(1);
+
+    // Convert it into key/value pairs
+    const params = new URLSearchParams(hash);
+
+    // Extract the access token
+    const accessToken = params.get("access_token");
+
+    if (accessToken) {
+        // Save it so the main website can use it
+        localStorage.setItem("spotify_access_token", accessToken);
+
+        // Return to the homepage
+        window.location.href = "./index.html";
+    } else {
+        document.body.innerHTML = "<h2>Spotify authentication failed.</h2>";
+    }
+</script>
+
+</body>
+</html> -->

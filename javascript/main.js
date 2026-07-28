@@ -262,3 +262,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 500);
       }
     });
+
+    //  spotify integration
+
+    // fetch("../spotify.html")
+    // .then(response => response.text())
+    // .then(html => {
+    //     document.getElementById("spotify-container").innerHTML = html;
+    // });
