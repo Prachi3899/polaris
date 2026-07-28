@@ -2,7 +2,7 @@
    SPOTIFY SECTION
    ========================================== */
 
-#spotify {
+/* #spotify {
     padding: 7rem 1.5rem;
     max-width: 900px;
     margin: 0 auto;
@@ -24,13 +24,13 @@
     line-height: 1.8;
     margin-bottom: 4rem;
     font-size: 1.15rem;
-}
+} */
 
 /* ==========================================
    PLAYER CARD
    ========================================== */
 
-.spotify-card {
+/* .spotify-card {
     display: flex;
     align-items: center;
     gap: 2rem;
@@ -49,26 +49,26 @@
     transform: translateY(-4px);
     border-color: var(--accent-gold);
     box-shadow: 0 20px 60px rgba(0,0,0,.25);
-}
+} */
 
 /* ==========================================
    ALBUM COVER
    ========================================== */
 
-.spotify-cover {
+/* .spotify-cover {
     width: 170px;
     height: 170px;
     object-fit: cover;
     border-radius: 14px;
 
     box-shadow: 0 20px 40px rgba(0,0,0,.35);
-}
+} */
 
 /* ==========================================
    SONG DETAILS
    ========================================== */
 
-.spotify-info {
+/* .spotify-info {
     flex: 1;
     text-align: left;
 }
@@ -98,13 +98,13 @@
     color: var(--muted-text);
     margin-top: .3rem;
     opacity: .8;
-}
+} */
 
 /* ==========================================
    PROGRESS BAR
    ========================================== */
 
-.spotify-progress {
+/* .spotify-progress {
     margin-top: 2rem;
 }
 
@@ -130,13 +130,13 @@
     background: #1DB954;
     border-radius: 50px;
     transition: width .3s linear;
-}
+} */
 
 /* ==========================================
    BUTTON
    ========================================== */
 
-.spotify-button {
+/* .spotify-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -160,34 +160,34 @@
 .spotify-button:hover {
     background: #18a74a;
     transform: translateY(-2px);
-}
+} */
 
 /* ==========================================
    LOADING
    ========================================== */
-
+/* 
 .spotify-loading {
     text-align: center;
     padding: 3rem;
     color: var(--muted-text);
     font-style: italic;
-}
+} */
 
 /* ==========================================
    OFFLINE
    ========================================== */
 
-.spotify-offline {
+/* .spotify-offline {
     padding: 3rem;
     border: 1px dashed rgba(255,255,255,.08);
     border-radius: 14px;
     color: var(--muted-text);
-}
+} */
 
 /* ==========================================
    ANIMATION
    ========================================== */
-
+/* 
 .album-spin {
     animation: albumRotate 12s linear infinite;
 }
@@ -202,13 +202,13 @@
         transform: rotate(360deg);
     }
 
-}
+} */
 
 /* ==========================================
    MOBILE
    ========================================== */
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
 
     .spotify-card {
         flex-direction: column;
@@ -228,4 +228,159 @@
         font-size: 1.7rem;
     }
 
+} */
+
+/* --- THE ROOM SOUNDS LIKE... --- */
+#current-song {
+  padding: 6rem 1rem;
+  text-align: center;
+}
+
+.sanctuary-room-sound {
+  max-width: 480px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--accent-gold);
+  padding: 3rem 2rem;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sanctuary-room-sound:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* SLOW ROTATING VINYL DISC */
+.room-sound-disc {
+  width: 72px;
+  height: 72px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 50%;
+  margin: 0 auto 1.8rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  animation: slowSpin 35s infinite linear;
+  transition: border-color 0.4s ease, transform 0.4s ease;
+}
+
+.room-sound-disc::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+  transition: box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.sanctuary-room-sound:hover .room-sound-disc {
+  animation-duration: 12s;
+  border-color: var(--accent-gold);
+}
+
+.sanctuary-room-sound:hover .room-sound-disc::after {
+  box-shadow: 0 0 12px var(--accent-gold), 0 0 0 3px rgba(255, 255, 255, 0.9);
+}
+
+@keyframes slowSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.room-sound-whisper {
+  font-family: var(--font-quote);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted-text);
+  margin-bottom: 1.2rem;
+  opacity: 0.85;
+}
+
+.room-sound-title {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.2;
+  margin-bottom: 0.2rem;
+}
+
+.room-sound-artist {
+  font-family: var(--font-quote);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--muted-text);
+  margin-bottom: 1.5rem;
+}
+
+.room-sound-link {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-color);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.room-sound-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent-gold);
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.room-sound-link:hover::after {
+  width: 100%;
+}
+
+/* NOTEBOOK DESK EDITOR STYLING */
+.desk-room-sound-section {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.desk-room-sound-box {
+  background: rgba(245, 241, 232, 0.8);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.desk-room-sound-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  border-radius: 4px;
+  outline: none;
+  color: var(--text-color);
+  margin-top: 0.5rem;
+}
+
+.desk-room-sound-status {
+  font-family: var(--font-quote);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--muted-text);
+  margin-top: 0.8rem;
+  min-height: 1.5rem;
 }
