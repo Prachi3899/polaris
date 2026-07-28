@@ -1,16 +1,3 @@
-<<<<<<< HEAD
-let publishedEntries = [];
-
-function createSlug(title, id) {
-      if (!title || !title.trim()) return id;
-      const cleanTitle = title
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .trim()
-        .replace(/\s+/g, '-');
-      return cleanTitle || id;
-    }
-=======
 window.publishThought = function () {
   const postTitle = document.getElementById('post-title');
   const postBody = document.getElementById('post-body');
@@ -138,4 +125,3 @@ function renderDeskPublishedList() {
     container.appendChild(item);
   });
 }
->>>>>>> fdd33070c53ed3e95d9949dca616633974a8b562

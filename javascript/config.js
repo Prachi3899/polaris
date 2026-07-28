@@ -8,4 +8,4 @@ const firebaseConfig = {
       measurementId: "G-DVEFM59RWW"
     };
 
-    const DB_ENCRYPTION_KEY = "polaris-sanctuary-secret-key";
+    //const DB_ENCRYPTION_KEY = "polaris-sanctuary-secret-key";

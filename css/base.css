@@ -16,7 +16,7 @@
       overflow-x: hidden;
 
       background-image: linear-gradient(rgba(245, 241, 232, 0.90), rgba(245, 241, 232, 0.92)),
-        url('../bg.jpg');
+        url('../polaris/bg.jpg');
       background-position: center center;
       background-repeat: no-repeat;
       background-size: cover;
