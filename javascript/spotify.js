@@ -181,8 +181,13 @@ async function fetchSpotifyMetadata(url) {
   return null;
 }
 
-// Listen to Firestore in real-time so it changes globally on every device
 function loadSongData() {
+  // Show a quiet loading state immediately on load so it doesn't flash old data
+  const titleEl = document.getElementById('public-room-sound-title');
+  const artistEl = document.getElementById('public-room-sound-artist');
+  if (titleEl) titleEl.textContent = "Listening...";
+  if (artistEl) artistEl.textContent = "";
+
   db.collection("settings").doc("room_soundtrack").onSnapshot((doc) => {
     let songData;
     if (doc.exists) {
@@ -220,7 +225,6 @@ window.saveSongSetting = async function() {
   };
 
   try {
-    // Save globally to Firebase Firestore
     await db.collection("settings").doc("room_soundtrack").set(songData);
 
     setTimeout(() => {
